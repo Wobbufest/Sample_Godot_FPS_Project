@@ -1,0 +1,142 @@
+[gd_scene load_steps=11 format=3 uid="uid://cpp577uf2ypke"]
+
+[ext_resource type="Script" path="res://Scripts/Enemy.gd" id="1_llh2c"]
+[ext_resource type="PackedScene" uid="uid://dtqa8gb1g5yc8" path="res://Assets/3D/Enemy/Enemy.gltf" id="1_qdw1y"]
+[ext_resource type="PackedScene" uid="uid://cbd0w6pb70a3s" path="res://Scenes/Enemy Health Bar.tscn" id="3_nsv1x"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vhn8r"]
+height = 1.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_h322y"]
+size = Vector2(2, 0.16)
+orientation = 2
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_suhej"]
+viewport_path = NodePath("Health Bar View")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_he3qb"]
+resource_local_to_scene = true
+transparency = 1
+shading_mode = 0
+albedo_texture = SubResource("ViewportTexture_suhej")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Animation" id="Animation_y1sxp"]
+resource_name = "Bounce"
+length = 0.8
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Enemy:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.3, 0.55, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 1.5, 0), Vector3(0, 1.5, 0), Vector3(0, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Enemy:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.3, 0.55, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.523599, 0, 0), Vector3(0.523599, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CollisionShape3D:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.3, 0.55, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.5, 0), Vector3(0, 2, 0), Vector3(0, 2, 0), Vector3(0, 0.5, 0), Vector3(0, 0.5, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_r1gkp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Enemy:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Enemy:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CollisionShape3D:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.5, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_h74yw"]
+_data = {
+"Bounce": SubResource("Animation_y1sxp"),
+"RESET": SubResource("Animation_r1gkp")
+}
+
+[node name="Enemy" type="CharacterBody3D" groups=["Enemy"]]
+script = ExtResource("1_llh2c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CapsuleShape3D_vhn8r")
+
+[node name="Enemy" parent="." instance=ExtResource("1_qdw1y")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Enemy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+mesh = SubResource("PlaneMesh_h322y")
+surface_material_override/0 = SubResource("StandardMaterial3D_he3qb")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_h74yw")
+}
+
+[node name="Health Bar View" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(200, 16)
+
+[node name="Enemy Health Bar" parent="Health Bar View" instance=ExtResource("3_nsv1x")]
+offset_left = 100.0
+offset_top = 8.0
+offset_right = 100.0
+offset_bottom = 8.0
