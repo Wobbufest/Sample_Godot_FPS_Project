@@ -98,7 +98,17 @@ We get the possible spawn points (All children of the *Enemy Spawn Points* node 
 
 ### Scene Hierarchy
 
-asdasd
+This scene has a few different nodes to help structure the basic concepts of our player character:
+
+ - *Player (CharacterBody3D)*: We used CharacterBody3D as a root for the scene so we have access to movement functions and basic collision handling by default.
+  - *Player Collision (CollisionShape3D)*: This node is accessed by its parent to serve as a collision shape of the physics body. In this case, we used a CapsuleShape3D to draw the player's collision.
+  - *Camera Pivot (Marker3D)*: This node will serve as a simple transform pivot for the "Head" of the player we will control.
+    - *Camera (Camera3D)*: This node serves as our camera to render the 3D scene. If no other Camera3D node is active (*Current* property), this becomes our main render target for the game.
+    - *Weapon Pivot (Marker3D)*: This node will also serve as a transform pivot, this time for the weapon our character is holding.
+      - *Weapon (3D Object)*: This node is just a default node structure when you add a 3D model (gltf format works best) into the scene. It represents our current weapon.
+    - *RayCast3D (RayCast3D)*: This node represents the player's shooting raycast, we will access it's functions to detect colliding enemies for our weapon shooting mechanic.
+   - *AnimationPlayer (AnimationPlayer)*: This node is responsible for the animations we will use in our character, in this case it's only a *"Shoot"* animation for our weapon.
+   - *CrossHair (Control): A simple hierarchy of control nodes that combine with a Panel node to make a simple crosshair reticle. You can swap it for a *Sprite2D* node in case you want to use a pre-rendered sprite.
 
 ### Scene Script
 
